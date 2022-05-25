@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const SInput = styled.input`
+export const Input = styled.input`
   width: 100%;
   border-radius: 3px;
   padding: 7px;
@@ -12,7 +12,3 @@ const SInput = styled.input`
     font-size: 12px;
   }
 `;
-
-export const Input = (props) => {
-  return <SInput {...props} />;
-};
