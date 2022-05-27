@@ -6,6 +6,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { logUserIn } from "../apollo";
 import { AuthLayout } from "../components/auth/AuthLayout";
 import { BottomBox } from "../components/auth/BottomBox";
 import { Button } from "../components/auth/Button";
@@ -42,6 +43,7 @@ export const Login = () => {
     formState: { errors, isValid },
     getValues,
     setError,
+    clearErrors,
   } = useForm({
     mode: "onChange",
   });
@@ -52,9 +54,13 @@ export const Login = () => {
       login: { ok, error, token },
     } = data;
     if (!ok) {
-      setError("result", {
+      return setError("result", {
         message: error,
       });
+    }
+    if (token) {
+      // console.log(token);
+      logUserIn(token);
     }
   };
 
@@ -72,7 +78,9 @@ export const Login = () => {
     });
   };
 
-  // console.log(errors);
+  const clearLoginError = () => {
+    clearErrors("result");
+  };
 
   return (
     <AuthLayout>
@@ -89,7 +97,11 @@ export const Login = () => {
                 value: 5,
                 message: "아이디는 5글자보다 길어야해요",
               },
+              onChange() {
+                clearErrors("result");
+              },
             })}
+            // onFocus={clearLoginError}
             type="text"
             placeholder="Username"
             hasError={Boolean(errors?.username?.message)}
@@ -103,6 +115,7 @@ export const Login = () => {
                 message: "비밀번호는 8글자보다 길어야해요",
               },
             })}
+            onFocus={clearLoginError}
             type="password"
             placeholder="Password"
             hasError={Boolean(errors?.password?.message)}
