@@ -52,13 +52,18 @@ export const SignUp = () => {
   const navigate = useNavigate();
 
   const onCompleted = (data) => {
+    const { username, password } = getValues();
     const {
       createAccount: { ok, error },
     } = data;
     if (!ok) {
       return;
     }
-    navigate(routes.home);
+    navigate(routes.home, {
+      state: { message: "계정이 생성되었습니다. 로그인해주세요" },
+      username,
+      password,
+    });
   };
   const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
     onCompleted,
@@ -68,6 +73,7 @@ export const SignUp = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    getValues,
   } = useForm({
     mode: "onChange",
   });
